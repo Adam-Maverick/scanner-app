@@ -1,4 +1,6 @@
-require('dotenv').config();
+// Load environment variables from .env and .env.development.local
+require('dotenv').config({ path: '.env' });
+require('dotenv').config({ path: '.env.development.local', override: false });
 const express = require('express');
 const cors = require('cors');
 const fetch = require('node-fetch');

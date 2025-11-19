@@ -1,4 +1,65 @@
-const { kv } = require('@vercel/kv');
+const { createClient } = require('redis');
+
+// Create Redis client using the connection URL
+const redisUrl = process.env.sky_REDIS_URL || process.env.REDIS_URL;
+const redisClient = createClient({
+    url: redisUrl,
+    socket: {
+        reconnectStrategy: (retries) => {
+            if (retries > 10) {
+                return new Error('Max reconnection attempts reached');
+            }
+            return Math.min(retries * 100, 3000);
+        }
+    }
+});
+
+// Connect to Redis
+redisClient.on('error', (err) => console.error('Redis Client Error:', err));
+redisClient.on('connect', () => console.log('✅ Connected to Redis'));
+
+// Initialize connection
+(async () => {
+    try {
+        await redisClient.connect();
+    } catch (err) {
+        console.error('Failed to connect to Redis:', err);
+    }
+})();
+
+// Create a kv-like interface for compatibility
+const kv = {
+    async zadd(key, options) {
+        if (!redisClient.isOpen) return null;
+        return await redisClient.zAdd(key, [{ score: options.score, value: options.member }]);
+    },
+    async zcount(key, min, max) {
+        if (!redisClient.isOpen) return 0;
+        return await redisClient.zCount(key, min, max);
+    },
+    async zrange(key, min, max, options = {}) {
+        if (!redisClient.isOpen) return [];
+        if (options.byScore) {
+            const results = await redisClient.zRangeByScore(key, min, max, {
+                LIMIT: options.count ? { offset: 0, count: options.count } : undefined
+            });
+            if (options.withScores) {
+                return await redisClient.zRangeByScoreWithScores(key, min, max, {
+                    LIMIT: options.count ? { offset: 0, count: options.count } : undefined
+                });
+            }
+            return results;
+        }
+        if (options.withScores) {
+            return await redisClient.zRangeWithScores(key, min, max);
+        }
+        return await redisClient.zRange(key, min, max);
+    },
+    async expire(key, seconds) {
+        if (!redisClient.isOpen) return null;
+        return await redisClient.expire(key, seconds);
+    }
+};
 
 /**
  * Rate Limiter using Vercel KV (Redis)
