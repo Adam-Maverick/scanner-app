@@ -77,7 +77,7 @@ app.post('/api/scan', async (req, res) => {
         }
 
         // Record successful request
-        recordRequest();
+        await recordRequest(clientId);
 
         // Return analysis ID
         res.json({
@@ -151,7 +151,7 @@ app.get('/api/analysis/:id', async (req, res) => {
         }
 
         // Record successful request
-        recordRequest();
+        await recordRequest(clientId);
 
         // Return analysis results
         res.json({
