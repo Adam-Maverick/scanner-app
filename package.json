@@ -1,0 +1,24 @@
+{
+    "name": "link-scanner-app",
+    "version": "1.0.0",
+    "description": "URL scanner using VirusTotal API",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "node server.js"
+    },
+    "keywords": [
+        "virustotal",
+        "url-scanner",
+        "security"
+    ],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.18.2",
+        "dotenv": "^16.3.1",
+        "cors": "^2.8.5",
+        "node-fetch": "^2.7.0",
+        "@vercel/kv": "^1.0.1"
+    }
+}

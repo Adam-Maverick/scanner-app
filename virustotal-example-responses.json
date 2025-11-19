@@ -1,0 +1,151 @@
+{
+  "example_1_submit_url": {
+    "description": "Response when submitting a URL for scanning",
+    "request": "POST https://www.virustotal.com/api/v3/urls",
+    "response": {
+      "data": {
+        "type": "analysis",
+        "id": "u-d0e196a0c25d35dd0a84593cbae0f38333aa58529936444ea26453eab28dfc86-746d7496",
+        "links": {
+          "self": "https://www.virustotal.com/api/v3/analyses/u-d0e196a0c25d35dd0a84593cbae0f38333aa58529936444ea26453eab28dfc86-746d7496"
+        }
+      }
+    }
+  },
+  "example_2_get_analysis": {
+    "description": "Response when retrieving analysis results (Google.com - SAFE)",
+    "request": "GET https://www.virustotal.com/api/v3/analyses/{analysis_id}",
+    "response": {
+      "data": {
+        "attributes": {
+          "date": 1763588432,
+          "status": "completed",
+          "stats": {
+            "harmless": 72,
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 26,
+            "timeout": 0
+          },
+          "results": {
+            "Google Safebrowsing": {
+              "method": "blacklist",
+              "engine_name": "Google Safebrowsing",
+              "category": "harmless",
+              "result": "clean"
+            },
+            "Sophos": {
+              "method": "blacklist",
+              "engine_name": "Sophos",
+              "category": "harmless",
+              "result": "clean"
+            },
+            "Kaspersky": {
+              "method": "blacklist",
+              "engine_name": "Kaspersky",
+              "category": "harmless",
+              "result": "clean"
+            },
+            "Fortinet": {
+              "method": "blacklist",
+              "engine_name": "Fortinet",
+              "category": "harmless",
+              "result": "clean"
+            },
+            "VIPRE": {
+              "method": "blacklist",
+              "engine_name": "VIPRE",
+              "category": "undetected",
+              "result": "unrated"
+            }
+          }
+        },
+        "meta": {
+          "url_info": {
+            "id": "d0e196a0c25d35dd0a84593cbae0f38333aa58529936444ea26453eab28dfc86",
+            "url": "https://www.google.com/"
+          }
+        }
+      }
+    }
+  },
+  "example_3_get_url_report": {
+    "description": "Response when getting full URL report with historical data",
+    "request": "GET https://www.virustotal.com/api/v3/urls/{url_id}",
+    "response": {
+      "data": {
+        "type": "url",
+        "id": "d0e196a0c25d35dd0a84593cbae0f38333aa58529936444ea26453eab28dfc86",
+        "attributes": {
+          "url": "https://www.google.com/",
+          "title": "Google",
+          "last_http_response_code": 200,
+          "last_final_url": "https://www.google.com/",
+          "last_analysis_date": 1763588432,
+          "last_analysis_stats": {
+            "harmless": 72,
+            "malicious": 0,
+            "suspicious": 0,
+            "undetected": 26,
+            "timeout": 0
+          },
+          "last_analysis_results": {
+            "Google Safebrowsing": {
+              "method": "blacklist",
+              "engine_name": "Google Safebrowsing",
+              "category": "harmless",
+              "result": "clean"
+            }
+          },
+          "categories": {
+            "BitDefender": "searchengines",
+            "Xcitium Verdict Cloud": "search engines & portals",
+            "Sophos": "search engines",
+            "Forcepoint ThreatSeeker": "search engines and portals"
+          },
+          "reputation": 0,
+          "total_votes": {
+            "harmless": 0,
+            "malicious": 0
+          },
+          "times_submitted": 12345,
+          "threat_names": [],
+          "tags": ["external-resources"],
+          "outgoing_links": [
+            "https://about.google/?utm_source=google-ZZ&utm_medium=referral&utm_campaign=hp-footer&fg=1"
+          ]
+        }
+      }
+    }
+  },
+  "risk_classification_guide": {
+    "description": "How to classify URLs based on stats",
+    "safe": {
+      "criteria": "malicious = 0 AND suspicious <= 3",
+      "example_stats": {
+        "harmless": 72,
+        "malicious": 0,
+        "suspicious": 0,
+        "undetected": 26
+      }
+    },
+    "suspicious": {
+      "criteria": "malicious = 0 AND suspicious > 3 OR suspicious percentage > 10%",
+      "example_stats": {
+        "harmless": 60,
+        "malicious": 0,
+        "suspicious": 8,
+        "undetected": 20
+      }
+    },
+    "dangerous": {
+      "criteria": "malicious > 0 OR malicious percentage > 5%",
+      "example_stats": {
+        "harmless": 50,
+        "malicious": 15,
+        "suspicious": 5,
+        "undetected": 18
+      }
+    }
+  }
+}
